@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const sidebarNavItems = [
   {
     title: "Posts",
-    href: "/posts",
+    href: "/dashboard",
     icon: "post"
   },
   {
@@ -52,7 +52,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
       
       <div className=" space-y-6 p-10 pb-16">
        <div className="flex flex-row  ">
-          <aside className="-mx-4 lg:w-1/5 hidden  md:block mr-10">
+          <aside className="-mx-4 lg:w-1/5 hidden  md:block mr-10 ">
             <SidebarNav items={sidebarNavItems} />
 
           </aside>

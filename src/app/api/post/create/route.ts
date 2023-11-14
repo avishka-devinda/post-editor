@@ -1,6 +1,9 @@
 import { db } from "@/lib/db";
 import { PostValidator } from "@lib/validators/post";
 import { z } from "zod";
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -8,11 +11,19 @@ export async function POST(req: Request) {
   const { postId, title, content } = PostValidator.parse(body);
 
   try {
+    const session = await getServerSession(authOptions)
+
+    if (!session) {
+      return new Response("Unauthorized", { status: 403 })
+    }
+
+    const { user } = session
+
     const newPost = await db.post.create({
       data: {
         title: title,
         content: content,
-        authorId: "author3455",
+        authorId: user.id
       },
     });
 

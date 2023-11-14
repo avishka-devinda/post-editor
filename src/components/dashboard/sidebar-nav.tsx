@@ -21,33 +21,61 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
   const pathname = usePathname();
 
   return (
-    <nav
-      className={cn(
-        "flex flex-col lg:flex-col lg:space-x-0 lg:space-y-1 min-h-[90vh] 2xl:w-72 bg-zinc-50 dark:bg-zinc-900 rounded-lg p-2",
-        className
-      )}
-      {...props}
-    >
-      
-      {items.map((item) => (
-        
-        <Link
-          key={item.href}
-          href={item.href}
-          className={cn(
-            buttonVariants({ variant: "secondary" }),
-            pathname === item.href
-              ? "bg-muted hover:bg-muted"
-              : "hover:bg-transparent hover:underline hover:bg-zinc-200 dark:hover:bg-zinc-900",
-            "justify-start rounded-xl"
-          )}
-        >
-      
-          <DynamicIcons title={item.icon} className="!mr-2 h-4 w-4"/> 
+    <div className="ml-2 flex justify-center  xl:justify-start w-full rounded-xl ">
+      <div className="w-64 bg-gray- dark:bg-zinc-900 rounded-md flex flex-col h-[85vh] justify-between ">
+        <div className="px-2 pt-4">
+          <ul className="flex flex-col space-y-2">
+            {/* Other list items... */}
 
-          {item.title}
-        </Link>
-      ))}
-    </nav>
+            {items.map((item) => (
+              <li
+                className={cn(
+                  buttonVariants({ variant: "secondary" }),
+                  pathname === item.href
+                    ? "bg-muted hover:bg-muted"
+                    : "hover:bg-transparent hover:underline hover:bg-zinc-200 dark:hover:bg-zinc-900",
+                  "justify-start rounded-xl"
+                )}
+              >
+                <Link key={item.href} href={item.href} className="flex ">
+                  <DynamicIcons title={item.icon} className="!mr-2 h-4 w-4" />
+
+                  {item.title}
+                </Link>
+              </li>
+            ))}
+            {/* Other list items... */}
+          </ul>
+        </div>
+
+        {/* Other sections... */}
+
+        <div className="m-2 pl-6 pr-4 py-4 bg-zinc-200 dark:bg-zinc-800 flex items-center justify-between rounded-xl">
+          <div className="flex items-center">
+            <div className="relative w-8 h-8 rounded-full ">
+              <img
+                className="rounded-full"
+                src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8YXZhdGFyfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+                alt=""
+              />
+            </div>
+            <div className="flex flex-col pl-3">
+              <div className="text-sm text-gray-950 dark:text-zinc-50">
+                Jane Doeson
+              </div>
+              <span className="text-xs text-gray-800  dark:text-zinc-200 font-light tracking-tight">
+                janedoeson@gmail.com
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
+
+// <div className="flex flex-col h-screen justify-between">
+//     <div className="mb-4 h-3">Item 1</div>
+//     <div className="mb-4 ">
+
+//     </div>

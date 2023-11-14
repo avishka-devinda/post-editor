@@ -1,3 +1,4 @@
+import { getServerSession } from "next-auth"
 
 import * as z from "zod"
 
@@ -20,6 +21,10 @@ export async function PATCH(
       // Validate route params.
       const { params } = routeContextSchema.parse(context)
   
+    // Check if the user has access to this post.
+    if (!(await verifyCurrentUserHasAccessToPost(params.postId))) {
+      return new Response(null, { status: 403 })
+    }
 
   
       // Get the request body and validate it.
@@ -65,6 +70,10 @@ export async function DELETE(
     const { params } = routeContextSchema.parse(context)
 
    
+    // Check if the user has access to this post.
+    if (!(await verifyCurrentUserHasAccessToPost(params.postId))) {
+      return new Response(null, { status: 403 })
+    }
     // Delete the post.
     await db.post.delete({
       where: {
@@ -80,4 +89,18 @@ export async function DELETE(
 
     return new Response(null, { status: 500 })
   }
+}
+
+
+
+async function verifyCurrentUserHasAccessToPost(postId: string) {
+  const session = await getServerSession(authOptions)
+  const count = await db.post.count({
+    where: {
+      id: postId,
+      authorId: session?.user.id,
+    },
+  })
+
+  return count > 0
 }
