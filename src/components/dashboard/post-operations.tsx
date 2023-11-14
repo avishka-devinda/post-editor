@@ -42,7 +42,7 @@ async function deletePost(postId: string) {
 }
 
 interface PostOperationsProps {
-  post: Pick<Post, "id" | "title">;
+  post: Pick<Post, "id" | "title" >;
 }
 
 export function PostOperations({ post }: PostOperationsProps) {

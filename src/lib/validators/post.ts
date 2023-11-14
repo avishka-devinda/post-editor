@@ -5,6 +5,11 @@ export const PostValidator = z.object({
     .max(128, {message: 'Title must be at least 128 characters'}),
     postId: z.string().optional(),
     content:z.any().optional(),
+    image:z.string().optional(),
+    description:z.string().optional(),
+    hasImage: z.boolean().optional(),
+    hasDescription: z.boolean().optional()
+
 })
 
 export type PostCreationRequest = z.infer<typeof PostValidator>

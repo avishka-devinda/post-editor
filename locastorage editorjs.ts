@@ -27,17 +27,10 @@ import { Badge } from "@components/ui/badge";
 // }
 
 interface EditorProps {
-  post: Pick<
-    Post,
-    | "id"
-    | "title"
-    | "content"
-    | "description"
-    | "image"
-    | "hasImage"
-    | "hasDescription"
-  >;
+  post: Pick<Post, "id" | "title" | "content" | "description" | "image">;
 }
+
+
 
 const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
   const { toast } = useToast();
@@ -103,7 +96,8 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
             config: {
               uploader: {
                 async uploadByFile(file: File) {
-                  const CLOUDINARY_URL = process.env.NEXT_PUBLIC_CLOUDINARY_URL!
+                  const CLOUDINARY_URL =
+                    "https://api.cloudinary.com/v1_1/dk8arygtb/image/upload";
 
                   const CLOUDINARY_UPLOAD_PRESET =
                     process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
@@ -158,6 +152,13 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
           table: Table,
           embed: Embed,
         },
+        async onChange(api, event) {
+          const data = await api.saver.save();
+          console.log(data)
+          const jsonDataString = JSON.stringify(data);
+
+          localStorage.setItem(post.id, jsonDataString);
+        },
       });
     }
   }, []);
@@ -207,15 +208,9 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
       content,
       postId,
       image,
-      description,
+      description
     }: PostCreationRequest) => {
-      const payload: PostCreationRequest = {
-        title,
-        content,
-        postId,
-        image,
-        description,
-      };
+      const payload: PostCreationRequest = { title, content, postId, image,description };
       const { data } = await axios.patch(`/api/post/${post.id}`, payload);
       return data;
     },
@@ -240,23 +235,15 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
     const blocks = await ref.current?.save();
 
     //check if have image
-    let image;
-    if (!post.hasImage) {
-      image =
-        blocks?.blocks[0]?.data?.file?.url ||
-        blocks?.blocks[1]?.data?.file?.url ||
-        "no-image";
-    }
+    const image =
+    blocks?.blocks[0]?.data?.file?.url || blocks?.blocks[1]?.data?.file?.url || "no-image";
 
     //check description
-    let description;
-    if (!post.hasDescription) {
-      description =
-        blocks?.blocks[0]?.data.text ||
-        blocks?.blocks[1]?.data.text ||
-        "no-description";
-    }
-    console.log("description", description);
+   const description = blocks?.blocks[0]?.data.text || blocks?.blocks[1]?.data.text || "no-description";
+
+   
+
+    console.log('description',description)
 
     const payload: PostCreationRequest = {
       title: data.title,
@@ -268,7 +255,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
 
     console.log("payload: ", payload);
 
-    savePost(payload);
+   savePost(payload);
   }
 
   const { ref: titleRef, ...rest } = register("title");
@@ -299,31 +286,19 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
           </div>
           <div className="flex justify-center items-center ">
             <div className="mx-3 flex">
-              {post.hasDescription && (
-                <p className="mx-1 text-xs font-medium text-muted-foreground flex items-center justify-center !text-green-500 dark:text-green-500 border border-green-500  dark:bg-zinc-900 bg-white p-2 rounded-xl">
-                  custom description
-                </p>
-              )}
-              {post.hasImage && (
-                <p className="mx-1 text-xs font-medium text-muted-foreground flex items-center justify-center !text-green-500 dark:text-green-500 border border-green-500  dark:bg-zinc-900 bg-white p-2 rounded-xl">
-                  custom Image
-                </p>
-              )}
+            <p className="mx-1 text-xs font-medium text-muted-foreground flex items-center justify-center !text-green-500 dark:text-green-500 border border-green-500  dark:bg-zinc-900 bg-white p-2 rounded-xl">
+                custom description
+              </p>
+              <p className="mx-1 text-xs font-medium text-muted-foreground flex items-center justify-center !text-green-500 dark:text-green-500 border border-green-500  dark:bg-zinc-900 bg-white p-2 rounded-xl">
+                custom Image
+              </p>
+
             </div>
-            <CustomOperations
-              post={{
-                id: post.id,
-                title: post.title,
-                description: post.description,
-                image: post.image,
-                hasImage: post.hasImage,
-                hasDescription: post.hasDescription,
-              }}
-            />
-            <button type="submit" className={cn(buttonVariants())}>
-              {false && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-              <span>Save</span>
-            </button>
+          <CustomOperations post={{ id: post.id, title: post.title, description: post.description, image:post.image }}  />
+          <button type="submit" className={cn(buttonVariants())}>
+            {false && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+            <span>Save</span>
+          </button>
           </div>
         </div>
         <div className="prose prose-stone mx-auto w-[800px] dark:prose-invert">

@@ -17,7 +17,10 @@ const getPostsForUser = cache(async () => {
     select: {
       id: true,
       title: true,
+      image:true,
       authorId: true,
+      hasDescription: true,
+      hasImage: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -81,7 +84,7 @@ export default async function DashboardPage() {
               key={index}
               id={post.id}
               title={post.title}
-              image=""
+              image={post.image}
               published=""
               date={post.updatedAt}
             />

@@ -38,6 +38,10 @@ export default async function EditorPage({ params }: EditorPageProps) {
           id: post.id,
           title: post.title,
           content: post.content,
+          description: post.description,
+          image: post.image,
+          hasDescription: post.hasDescription,
+          hasImage: post.hasImage
         }}
       />
     </div>

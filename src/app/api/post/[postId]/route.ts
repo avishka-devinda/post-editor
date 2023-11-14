@@ -25,7 +25,9 @@ export async function PATCH(
       // Get the request body and validate it.
       const json = await req.json()
       const body = PostValidator.parse(json)
-  
+
+
+      console.log('desc',body.description)
       // Update the post.
       // TODO: Implement sanitization for content.
       await db.post.update({
@@ -35,6 +37,10 @@ export async function PATCH(
         data: {
           title: body.title,
           content: body.content,
+          image:body.image,
+          description:body.description,
+          hasImage: body.hasImage,
+          hasDescription: body.hasDescription
         },
       })
   
