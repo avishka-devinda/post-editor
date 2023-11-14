@@ -1,3 +1,4 @@
+import { CheckSquare, ShieldAlert } from 'lucide-react';
 import React from 'react';
 
 // Define individual icon components
@@ -60,6 +61,21 @@ const UnsavedIcon: React.FC<IconProps> = ({ className }) => (
 </svg>
 );
 
+
+
+const PublishedIcon: React.FC<IconProps> = ({ className }) => (
+  <CheckSquare
+  className={className} />
+);
+
+const UnPublished: React.FC<IconProps> = ({ className }) => (
+  <ShieldAlert 
+  className={className} />
+);
+
+
+
+
 interface IconProps {
   className?: string;
 }
@@ -68,6 +84,8 @@ const iconComponents: { [key: string]: React.FC<IconProps> } = {
   post: PostIcon,
   draft: DraftIcon,
   unsaved: UnsavedIcon,
+  published:PublishedIcon,
+  unpublished:UnPublished
 };
 
 export const DynamicIcons: React.FC<{ title: string } & IconProps> = ({ title, className }) => {

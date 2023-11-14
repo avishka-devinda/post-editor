@@ -43,12 +43,9 @@ interface PostOperationsProps {
 
 const CustomOperations = ({ post }: PostOperationsProps) => {
   const router = useRouter();
-  const [showDelete, setShowDelete] = React.useState<boolean>(false);
+  const [showDescription, setShowDescription] = React.useState<boolean>(false);
   const [showCustomImage, setCustomImage] = React.useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<String>(""); // Declare the file variable with the File type
-
-  const [isDeleteLoading, setIsDeleteLoading] = React.useState<boolean>(false);
-  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const { toast } = useToast();
 
@@ -165,7 +162,7 @@ const CustomOperations = ({ post }: PostOperationsProps) => {
         <DropdownMenuContent align="end">
           <DropdownMenuItem
             className="flex cursor-pointer items-center"
-            onSelect={() => setShowDelete(true)}
+            onSelect={() => setShowDescription(true)}
           >
             custom description
           </DropdownMenuItem>
@@ -177,7 +174,7 @@ const CustomOperations = ({ post }: PostOperationsProps) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <Dialog open={showDelete} onOpenChange={setShowDelete}>
+      <Dialog open={showDescription} onOpenChange={setShowDescription}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Custom description</DialogTitle>
@@ -199,7 +196,7 @@ const CustomOperations = ({ post }: PostOperationsProps) => {
               onChange={(e) => setDescription(e.target.value)}
             />
             <p className="text-sm text-muted-foreground">
-              Your message will be copied to the support team.
+            If you not to add a description, your post will default to the first paragraph as its description
             </p>
           </div>
           <DialogFooter>

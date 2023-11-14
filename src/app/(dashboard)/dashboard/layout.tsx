@@ -16,9 +16,21 @@ const sidebarNavItems = [
     icon: "post"
   },
   {
+    title: "Published",
+    href: "/Publish",
+    icon: "published"
+
+  },
+  {
     title: "Draft",
-    href: "/draft",
+    href: "/examples/forms/appearance",
     icon: "draft"
+
+  },
+  {
+    title: "Unpublished",
+    href: "/examples/forms/appearance",
+    icon: "unpublished"
 
   },
   {
