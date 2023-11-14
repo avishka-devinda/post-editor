@@ -45,7 +45,9 @@ export async function PATCH(
           image:body.image,
           description:body.description,
           hasImage: body.hasImage,
-          hasDescription: body.hasDescription
+          hasDescription: body.hasDescription,
+          published:  body.published
+
         },
       })
   

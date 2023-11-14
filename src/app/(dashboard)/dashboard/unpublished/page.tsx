@@ -14,11 +14,13 @@ import { cache } from "react"
 
 const getPostsForUser = cache(async () => {
   return await db.post.findMany({
+    where: {
+      published: false
+    },
     select: {
       id: true,
       title: true,
       image:true,
-      published: true,
       authorId: true,
       hasDescription: true,
       hasImage: true,
@@ -67,9 +69,9 @@ export default async function DashboardPage() {
       <div>
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="text-lg font-medium">Posts</h3>
+            <h3 className="text-lg font-medium">Published Posts</h3>
             <p className="text-sm text-muted-foreground">
-              Create and manage posts.
+              your can see your all published posts
             </p>
           </div>
           {/* <Link href="/edior/1234" className={`${buttonVariants()}`}>

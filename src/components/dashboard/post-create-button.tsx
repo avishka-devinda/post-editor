@@ -22,8 +22,8 @@ export function PostCreateButton({
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const { mutate: createPost } = useMutation({
-    mutationFn: async ({ title }: PostCreationRequest) => {
-      const payload: PostCreationRequest = { title };
+    mutationFn: async ({ title,published }: PostCreationRequest) => {
+      const payload: PostCreationRequest = { title, published };
       const { data } = await axios.post("/api/post/create", payload);
       return data;
     },
@@ -50,6 +50,7 @@ export function PostCreateButton({
 
     const payload: PostCreationRequest = {
       title: "Untitled Post",
+      published: false
     };
 
     createPost(payload);

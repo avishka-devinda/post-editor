@@ -19,11 +19,11 @@ async function getPostForUser(postId: Post["id"]) {
 
 export default async function EditorPage({ params }: EditorPageProps) {
 
-  const posts = await db.post.findUnique({
-    where: {
-      id: params.postId,
-    },
-  });
+  // const posts = await db.post.findUnique({
+  //   where: {
+  //     id: params.postId,
+  //   },
+  // });
 
   const post = await getPostForUser(params.postId);
 
@@ -41,7 +41,8 @@ export default async function EditorPage({ params }: EditorPageProps) {
           description: post.description,
           image: post.image,
           hasDescription: post.hasDescription,
-          hasImage: post.hasImage
+          hasImage: post.hasImage,
+          published: post.published
         }}
       />
     </div>

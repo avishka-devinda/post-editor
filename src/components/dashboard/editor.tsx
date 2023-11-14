@@ -35,7 +35,8 @@ interface EditorProps {
     | "description"
     | "image"
     | "hasImage"
-    | "hasDescription"
+    | "hasDescription" 
+    |"published"
   >;
 }
 
@@ -53,6 +54,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
       title: post.title,
       postId: post.id,
       content: post.content,
+      published:false
     },
   });
 
@@ -103,7 +105,8 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
             config: {
               uploader: {
                 async uploadByFile(file: File) {
-                  const CLOUDINARY_URL = process.env.NEXT_PUBLIC_CLOUDINARY_URL!
+                  const CLOUDINARY_URL =
+                    process.env.NEXT_PUBLIC_CLOUDINARY_URL!;
 
                   const CLOUDINARY_UPLOAD_PRESET =
                     process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
@@ -208,6 +211,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
       postId,
       image,
       description,
+      published
     }: PostCreationRequest) => {
       const payload: PostCreationRequest = {
         title,
@@ -215,6 +219,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
         postId,
         image,
         description,
+        published
       };
       const { data } = await axios.patch(`/api/post/${post.id}`, payload);
       return data;
@@ -264,6 +269,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
       postId: post.id,
       description: description,
       image: image,
+      published: true
     };
 
     console.log("payload: ", payload);
@@ -285,7 +291,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
               <ChevronLeft className="w-4 h-4 mr-2" />
               Back
             </Link>
-            {true ? (
+            {post.published ? (
               <p className="text-sm text-muted-foreground flex items-center justify-center text-green-500  dark:bg-zinc-900 bg-zinc-50 p-2 rounded-xl">
                 <CheckCircle2 className="w-5 h-5 mr-2 text-green-500" />
                 Published
@@ -318,6 +324,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
                 image: post.image,
                 hasImage: post.hasImage,
                 hasDescription: post.hasDescription,
+                published: post.published
               }}
             />
             <button type="submit" className={cn(buttonVariants())}>

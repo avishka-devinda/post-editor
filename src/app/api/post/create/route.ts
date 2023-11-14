@@ -8,7 +8,7 @@ import { authOptions } from "@/lib/auth"
 export async function POST(req: Request) {
   const body = await req.json();
 
-  const { postId, title, content } = PostValidator.parse(body);
+  const { postId, title, content,published } = PostValidator.parse(body);
 
   try {
     const session = await getServerSession(authOptions)
@@ -19,10 +19,11 @@ export async function POST(req: Request) {
 
     const { user } = session
 
-    const newPost = await db.post.create({
+    const newPost:any = await db.post.create({
       data: {
         title: title,
         content: content,
+        published:  published,
         authorId: user.id
       },
     });

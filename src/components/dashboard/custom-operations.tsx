@@ -37,7 +37,7 @@ import { Progress } from "@components/ui/progress";
 interface PostOperationsProps {
   post: Pick<
     Post,
-    "id" | "title" | "description" | "image" | "hasImage" | "hasDescription"
+    "id" | "title" | "description" | "image" | "hasImage" | "hasDescription"|"published"
   >;
 }
 
@@ -52,9 +52,9 @@ const CustomOperations = ({ post }: PostOperationsProps) => {
   const [file, setFile] = useState<File | null>(null); // Declare the file variable with the File type
   const [progress, setProgress] = useState(0);
 
-  async function addDescription({ postId, title }: PostCreationRequest) {
+  async function addDescription({ postId, title,published }: PostCreationRequest) {
     console.log(description);
-    const payload: PostCreationRequest = { title, postId, description, hasDescription:true };
+    const payload: PostCreationRequest = { title, postId, description,published, hasDescription:true };
 
     console.log(payload);
     const data = await axios.patch(`/api/post/${postId}`, payload);
@@ -131,8 +131,9 @@ const CustomOperations = ({ post }: PostOperationsProps) => {
     const postId = post.id;
     const image = `${imageUrl}`;
     const title = post.title;
+    const published = post.published
     console.log(image, "img");
-    const payload: PostCreationRequest = { title, postId, description, image,hasImage:true };
+    const payload: PostCreationRequest = { title, postId, description, image,hasImage:true, published };
     console.log(payload);
     const data = await axios.patch(`/api/post/${postId}`, payload);
 
@@ -202,7 +203,7 @@ const CustomOperations = ({ post }: PostOperationsProps) => {
           <DialogFooter>
             <Button
               onClick={() =>
-                addDescription({ postId: post.id, title: post.title })
+                addDescription({ postId: post.id, title: post.title,published:post.published })
               }
             >
               Save

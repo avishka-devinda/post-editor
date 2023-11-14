@@ -1,9 +1,10 @@
 import { Badge } from "@components/ui/badge";
-import { CheckCircle2, Clock } from "lucide-react";
+import { CheckCircle2, Clock, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import React, { FC } from "react";
 import { PostOperations } from "./post-operations";
 import Image from "next/image";
+import { Icons } from "@components/Icon";
 
 interface PostCardProps {
   title: string;
@@ -41,31 +42,41 @@ const PostCard: FC<PostCardProps> = ({ title, image, published, date, id }) => {
           <p className="px-4 text-lg font-medium text-zinc-900 dark:text-zinc-100">
             {title}
           </p>
-          <Badge
-            variant="outline"
-            className="text-green-500 my-1 mx-4 py-1 px-3 bg-white dark:bg-zinc-800 "
-          >
-            <CheckCircle2 className="w-4 h-4 mr-2 text-green-500" />
-            Published
-          </Badge>
+          {published ? (
+            <Badge
+              variant="outline"
+              className="text-green-500 my-1 mx-4 py-1 px-3 bg-white dark:bg-zinc-800 "
+            >
+              <CheckCircle2 className="w-4 h-4 mr-2 text-green-500" />
+              Published
+            </Badge>
+          ) : (
+            <Badge
+              variant="outline"
+              className="text-yellow-500 my-1 mx-4 py-1 px-3 bg-white dark:bg-zinc-800 "
+            >
+              <ShieldAlert className="w-4 h-4 mr-2 text-yellow-500" />
+              Unpublished
+            </Badge>
+          )}
           <div className="mx-4 my-1">
             <Badge variant="secondary" className="text-sm font-medium">
-            <Clock className="w-4 h-4 mr-1" />
+              <Clock className="w-4 h-4 mr-1" />
               {formatDateTime(date)}
             </Badge>
           </div>
         </div>
 
         <div className="">
-          {image && image !=="no-image" &&
-          <Image
-            src={image}
-            alt="Post card image"
-            width={96} // Set your desired width
-            height={96} // Set your desired height
-            className="rounded-lg  w-24 h-24"
-          />
-          }
+          {image && image !== "no-image" && (
+            <Image
+              src={image}
+              alt="Post card image"
+              width={96} // Set your desired width
+              height={96} // Set your desired height
+              className="rounded-lg  w-24 h-24"
+            />
+          )}
         </div>
       </Link>
       <div className="flex items-center justify-end pt-2">

@@ -50,15 +50,15 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
 
         {/* Other sections... */}
 
-        <div className="m-2 pl-6 pr-4 py-4 bg-zinc-200 dark:bg-zinc-800 flex items-center justify-between rounded-xl">
+        <div className="m-2  pl-6 pr-4 py-4 bg-zinc-200 dark:bg-zinc-800 flex items-center justify-between rounded-xl">
           <div className="flex items-center">
-            <div className="relative w-8 h-8 rounded-full ">
+            {/* <div className="relative w-8 h-8 rounded-full ">
               <img
                 className="rounded-full"
                 src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8YXZhdGFyfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
                 alt=""
               />
-            </div>
+            </div> */}
             <div className="flex flex-col pl-3">
               <div className="text-sm text-gray-950 dark:text-zinc-50">
                 Jane Doeson
