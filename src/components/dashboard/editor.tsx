@@ -79,9 +79,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
   const router = useRouter();
   const [isSaving, setIsSaving] = React.useState<boolean>(false);
   const [isMounted, setIsMounted] = React.useState<boolean>(false);
-  const [unsaved, setUnsaved] = useState(false);
 
-  const [isUnsaved, setIsunsaved] = useState(false);
 
   const {
     register,
@@ -195,7 +193,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
        
       });
     }
-  }, [post, unsaved]);
+  }, [post]);
 
   React.useEffect(() => {
     router.refresh();
@@ -276,9 +274,6 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
     }
   }
 
-  const clickUnsaved = () => {
-    setUnsaved(!unsaved);
-  };
 
   if (!isMounted) {
     return null;
@@ -316,37 +311,8 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
           </div>
         </div>
         <div className="flex">
-          <div className="mx-3 flex">
-            {post.hasDescription && (
-              <Button
-                onClick={clickUnsaved}
-                variant="outline"
-                className="text-green-500 text-xs"
-              >
-                custom description
-              </Button>
-            )}
-            {post.hasImage && (
-              <Button
-                onClick={clickUnsaved}
-                variant="outline"
-                className="text-green-500 text-xs mx-1"
-              >
-                custom Image
-              </Button>
-            )}
-          </div>
-          <CustomOperations
-            post={{
-              id: post.id,
-              title: post.title,
-              description: post.description,
-              image: post.image,
-              hasImage: post.hasImage,
-              hasDescription: post.hasDescription,
-              published: post.published,
-            }}
-          />
+          
+        
           <button
             type="submit"
             form="post-form"
