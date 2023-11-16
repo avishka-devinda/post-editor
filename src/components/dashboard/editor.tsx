@@ -14,17 +14,20 @@ import { useMutation } from "react-query";
 import axios from "axios";
 import Link from "next/link";
 import { Icons } from "@components/Icon";
-import { buttonVariants } from "@components/ui/button";
+import { Button, buttonVariants } from "@components/ui/button";
 import { cn } from "@lib/utils";
-import { CheckCircle2, ChevronLeft, CircleSlash } from "lucide-react";
+import {
+  CheckCircle,
+  CheckCircle2,
+  ChevronLeft,
+  CircleSlash,
+  ShieldAlert,
+} from "lucide-react";
 import type { Post } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import CustomOperations from "./custom-operations";
 import { Badge } from "@components/ui/badge";
-
-// interface EditorProps {
-//   postId: string | undefined;
-// }
+import React from "react";
 
 interface EditorProps {
   post: Pick<
@@ -35,14 +38,50 @@ interface EditorProps {
     | "description"
     | "image"
     | "hasImage"
-    | "hasDescription" 
-    |"published"
+    | "hasDescription"
+    | "published"
   >;
+}
+
+function deepEqual(obj1: any, obj2: any) {
+  // Check if the objects are of the same type
+  if (
+    typeof obj1 !== "object" ||
+    typeof obj2 !== "object" ||
+    obj1 === null ||
+    obj2 === null
+  ) {
+    return obj1 === obj2;
+  }
+
+  // Get the keys of the objects
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+
+  // Check if the number of keys is the same
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  // Check if all properties are deep equal
+  for (const key of keys1) {
+    if (!deepEqual(obj1[key], obj2[key])) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
   const { toast } = useToast();
+  const ref = React.useRef<EditorJS>();
   const router = useRouter();
+  const [isSaving, setIsSaving] = React.useState<boolean>(false);
+  const [isMounted, setIsMounted] = React.useState<boolean>(false);
+  const [unsaved, setUnsaved] = useState(false);
+
+  const [isUnsaved, setIsunsaved] = useState(false);
 
   const {
     register,
@@ -54,19 +93,10 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
       title: post.title,
       postId: post.id,
       content: post.content,
-      published:false
+      published: false,
     },
   });
 
-  // const {} = useForm<PostCreationRequest({
-  //   resolver: zodResolver(PostValidator),
-  //   defaultValuse: {
-  //     postId
-  //   }
-  // })
-
-  const ref = useRef<EditorJS>();
-  const [isMounted, setIsMounted] = useState<boolean>(false);
   const _titleRef = useRef<HTMLTextAreaElement>(null);
 
   const initializeEditor = useCallback(async () => {
@@ -82,7 +112,45 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
 
     const body = postPatchSchema.parse(post);
 
-    console.log(body);
+    let storedData = null;
+
+    const localdata = localStorage.getItem(post.id);
+
+    let storedDataObject;
+
+    if (localdata) {
+      storedDataObject = JSON.parse(localdata);
+    }
+
+    const object1 = body.content.blocks;
+
+    const object2 = storedDataObject.blocks;
+
+    const areObjectsEqual = deepEqual(object1, object2);
+
+    if (!areObjectsEqual) {
+      setIsunsaved(true);
+    }
+
+    if (unsaved) {
+      const storedDataString = localStorage.getItem(post.id);
+      if (storedDataString) {
+        console.log("1");
+
+        storedData = JSON.parse(storedDataString);
+        // Now 'storedData' contains the data retrieved from local storage
+      } else {
+        console.log("2");
+
+        storedData = null;
+      }
+    } else {
+      console.log("3");
+      true;
+      storedData = body.content;
+    }
+
+    console.log(storedData);
 
     if (!ref.current) {
       const editor = new EditorJS({
@@ -90,8 +158,9 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
         onReady() {
           ref.current = editor;
         },
-        placeholder: "Type here to write your post ...",
-        data: body.content,
+        placeholder: "Type here to write your post...",
+        inlineToolbar: true,
+        data: storedData,
         tools: {
           header: Header,
           linkTool: {
@@ -100,6 +169,11 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
               endpoint: "/api/link",
             },
           },
+          list: List,
+          code: Code,
+          inlineCode: InlineCode,
+          table: Table,
+          embed: Embed,
           image: {
             class: ImageTool,
             config: {
@@ -155,47 +229,28 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
               },
             },
           },
-          list: List,
-          code: Code,
-          inlineCode: InlineCode,
-          table: Table,
-          embed: Embed,
+        },
+        async onChange(api, event) {
+          const data = await api.saver.save();
+          console.log(data);
+          const jsonDataString = JSON.stringify(data);
+
+          localStorage.setItem(post.id, jsonDataString);
         },
       });
     }
-  }, []);
+  }, [post, unsaved]);
 
-  useEffect(() => {
-    if (Object.keys(errors).length) {
-      for (const [_key, value] of Object.entries(errors)) {
-        value;
-        toast({
-          title: "Something went wrong.",
-          description: (value as { message: string }).message,
-          variant: "destructive",
-        });
-      }
-    }
-  }, [errors]);
-
-  useEffect(() => {
+  React.useEffect(() => {
     router.refresh();
     if (typeof window !== "undefined") {
       setIsMounted(true);
     }
   }, []);
 
-  useEffect(() => {
-    const init = async () => {
-      await initializeEditor();
-
-      setTimeout(() => {
-        _titleRef.current?.focus();
-      }, 0);
-    };
-
+  React.useEffect(() => {
     if (isMounted) {
-      init();
+      initializeEditor();
 
       return () => {
         ref.current?.destroy();
@@ -203,43 +258,6 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
       };
     }
   }, [isMounted, initializeEditor]);
-
-  const { mutate: savePost } = useMutation({
-    mutationFn: async ({
-      title,
-      content,
-      postId,
-      image,
-      description,
-      published
-    }: PostCreationRequest) => {
-      const payload: PostCreationRequest = {
-        title,
-        content,
-        postId,
-        image,
-        description,
-        published
-      };
-      const { data } = await axios.patch(`/api/post/${post.id}`, payload);
-      return data;
-    },
-
-    onError: () => {
-      toast({
-        title: "Something went wrong.",
-        description: "Your post was not published. Please try again.",
-        variant: "destructive",
-      });
-    },
-    onSuccess: () => {
-      toast({
-        description: "Your post has been saved.",
-      });
-
-      router.refresh();
-    },
-  });
 
   async function onSubmit(data: PostCreationRequest) {
     const blocks = await ref.current?.save();
@@ -269,95 +287,166 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
       postId: post.id,
       description: description,
       image: image,
-      published: true
+      published: true,
     };
 
     console.log("payload: ", payload);
 
-    savePost(payload);
+    try {
+      const response = await axios.patch(`/api/post/${post.id}`, payload);
+
+      if (response.status === 200) {
+        router.refresh();
+
+        return toast({
+          description: "Your post has been saved.",
+        });
+      } else {
+        return toast({
+          title: "Something went wrong.",
+          description: "Your post was not saved. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error saving post:", error);
+      // Handle the error as needed
+      return toast({
+        title: "Error",
+        description:
+          "An error occurred while saving your post. Please try again.",
+        variant: "destructive",
+      });
+    }
   }
 
-  const { ref: titleRef, ...rest } = register("title");
+  const clickUnsaved = () => {
+    setUnsaved(!unsaved);
+  };
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="grid w-full gap-10">
-        <div className="flex w-full items-center justify-between">
+    <div>
+      <div className="flex justify-between items-center">
+        <div>
           <div className="flex items-center space-x-10">
             <Link
               href="/dashboard"
               className={cn(buttonVariants({ variant: "ghost" }))}
             >
-              <ChevronLeft className="w-4 h-4 mr-2" />
-              Back
+              <>
+                <ChevronLeft className="w-4 h-4 mr-2" />
+                Back
+              </>
             </Link>
-            {post.published ? (
-              <p className="text-sm text-muted-foreground flex items-center justify-center text-green-500  dark:bg-zinc-900 bg-zinc-50 p-2 rounded-xl">
-                <CheckCircle2 className="w-5 h-5 mr-2 text-green-500" />
-                Published
-              </p>
-            ) : (
-              <p className="text-sm text-muted-foreground flex items-center justify-center text-red-500  dark:bg-zinc-900 bg-zinc-50 p-2 rounded-xl">
-                <CircleSlash className="w-5 h-5 mr-2 text-red-500" />
-                draft
-              </p>
-            )}
-          </div>
-          <div className="flex justify-center items-center ">
-            <div className="mx-3 flex">
-              {post.hasDescription && (
-                <p className="mx-1 text-xs font-medium text-muted-foreground flex items-center justify-center !text-green-500 dark:text-green-500 border border-green-500  dark:bg-zinc-900 bg-white p-2 rounded-xl">
-                  custom description
+            <div className="text-sm text-muted-foreground">
+              {post.published ? (
+                <p className="text-sm text-muted-foreground flex">
+                  <CheckCircle2 className="w-5 h-5 mr-2 text-green-500" />
+                  Published
                 </p>
-              )}
-              {post.hasImage && (
-                <p className="mx-1 text-xs font-medium text-muted-foreground flex items-center justify-center !text-green-500 dark:text-green-500 border border-green-500  dark:bg-zinc-900 bg-white p-2 rounded-xl">
-                  custom Image
+              ) : (
+                <p className="text-sm text-muted-foreground flex">
+                  <CircleSlash className="w-5 h-5 mr-2 text-red-500" />
+                  draft
                 </p>
               )}
             </div>
-            <CustomOperations
-              post={{
-                id: post.id,
-                title: post.title,
-                description: post.description,
-                image: post.image,
-                hasImage: post.hasImage,
-                hasDescription: post.hasDescription,
-                published: post.published
-              }}
-            />
-            <button type="submit" className={cn(buttonVariants())}>
-              {false && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-              <span>Save</span>
-            </button>
+
+            {isUnsaved ? (
+              unsaved ? (
+                <Button
+                  onClick={() => setUnsaved(!unsaved)}
+                  variant={"secondary"}
+                  className="text-green-500"
+                >
+                  <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
+                  saved
+                </Button>
+              ) : (
+                <Button
+                  onClick={clickUnsaved}
+                  variant={"secondary"}
+                  className="text-yellow-500"
+                >
+                  <ShieldAlert className="w-4 h-4 mr-2 text-yellow-500" />
+                  unsaved
+                </Button>
+              )
+            ) : null}
           </div>
         </div>
-        <div className="prose prose-stone mx-auto w-[800px] dark:prose-invert">
-          <TextareaAutosize
-            autoFocus
-            id="title"
-            ref={(e) => {
-              titleRef(e);
-              // @ts-ignore
-              _titleRef.current = e;
+        <div className="flex">
+          <div className="mx-3 flex">
+            {post.hasDescription && (
+              <Button
+                onClick={clickUnsaved}
+                variant="outline"
+                className="text-green-500 text-xs"
+              >
+                custom description
+              </Button>
+            )}
+            {post.hasImage && (
+              <Button
+                onClick={clickUnsaved}
+                variant="outline"
+                className="text-green-500 text-xs mx-1"
+              >
+                custom Image
+              </Button>
+            )}
+          </div>
+          <CustomOperations
+            post={{
+              id: post.id,
+              title: post.title,
+              description: post.description,
+              image: post.image,
+              hasImage: post.hasImage,
+              hasDescription: post.hasDescription,
+              published: post.published,
             }}
-            {...rest}
-            // defaultValue={post.title}
-            placeholder="Post title"
-            className="w-full resize-none appearance-none overflow-hidden bg-transparent text-5xl font-bold focus:outline-none"
           />
-          <div id="editor" className="min-h-[500px]" />
-          <p className="text-sm text-gray-500">
-            Use{" "}
-            <kbd className="rounded-md border bg-muted px-1 text-xs uppercase">
-              Tab
-            </kbd>{" "}
-            to open the command menu.
-          </p>
+          <button
+            type="submit"
+            form="post-form"
+            className={cn(buttonVariants())}
+          >
+            {isSaving && (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            <span>Save</span>
+          </button>
         </div>
       </div>
-    </form>
+      <form id="post-form" onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid w-full gap-10">
+          <div className="flex w-full items-center justify-between"></div>
+          <div className="prose prose-stone mx-auto w-[800px] dark:prose-invert">
+            <TextareaAutosize
+              autoFocus
+              id="title"
+              defaultValue={post.title}
+              placeholder="Post title"
+              className="w-full resize-none appearance-none overflow-hidden bg-transparent text-5xl font-bold focus:outline-none"
+              {...register("title")}
+            />
+            <div id="editor" className="min-h-[500px]" />
+            <p className="text-sm text-gray-500">
+              Use{" "}
+              <kbd className="rounded-md border bg-muted px-1 text-xs uppercase">
+                Tab
+              </kbd>{" "}
+              to open the command menu.
+            </p>
+          </div>
+        </div>
+      </form>
+    </div>
   );
 };
 

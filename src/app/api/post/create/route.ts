@@ -7,8 +7,9 @@ import { authOptions } from "@/lib/auth"
 
 export async function POST(req: Request) {
   const body = await req.json();
-
+console.log('thi runnn')
   const { postId, title, content,published } = PostValidator.parse(body);
+  console.log('thi runnn',body)
 
   try {
     const session = await getServerSession(authOptions)
