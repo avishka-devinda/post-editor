@@ -12,9 +12,10 @@ interface PostCardProps {
   published: string;
   date: string;
   id: string;
+  unsaved?: boolean
 }
 
-const PostCard: FC<PostCardProps> = ({ title, image, published, date, id }) => {
+const PostCard: FC<PostCardProps> = ({ title, image, published, date,unsaved, id }) => {
   const formatDateTime = (datetimeString: string) => {
     const options = {
       weekday: "short", // or 'long' or 'narrow'
@@ -42,7 +43,18 @@ const PostCard: FC<PostCardProps> = ({ title, image, published, date, id }) => {
           <p className="px-4 text-lg font-medium text-zinc-900 dark:text-zinc-100">
             {title}
           </p>
-          {published ? (
+           {unsaved && 
+            <Badge
+            variant="outline"
+            className="bordertext-zinc-900 my-1 mx-4 py-1 px-3 bg-yellow-500 "
+          >
+            <ShieldAlert className="w-4 h-4 mr-2 text-zinc-900" />
+            unsaved
+          </Badge>
+          }
+
+          {!unsaved?
+           published ? (
             <Badge
               variant="outline"
               className="text-green-500 my-1 mx-4 py-1 px-3 bg-white dark:bg-zinc-800 "
@@ -58,7 +70,9 @@ const PostCard: FC<PostCardProps> = ({ title, image, published, date, id }) => {
               <ShieldAlert className="w-4 h-4 mr-2 text-yellow-500" />
               Unpublished
             </Badge>
-          )}
+          ):null }
+
+         
           <div className="mx-4 my-1">
             <Badge variant="secondary" className="text-sm font-medium">
               <Clock className="w-4 h-4 mr-1" />

@@ -13,6 +13,17 @@ import { useQuery } from "react-query";
 import { cache } from "react"
 
 
+type Post = {
+  id: string;
+  title: string;
+  image: string;
+  hasDescription: string;
+  hasImage: string;
+  published: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 // const fetchData = async () => {
 //   const response = await axios.get("/api/post", {});
 
@@ -23,7 +34,7 @@ export default  function DashboardPage() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    const localStorageKey = 'postIds';
+    const localStorageKey = 'posts';
     const savedPostsString = localStorage.getItem(localStorageKey);
     let savedPosts = [];
 
@@ -47,7 +58,7 @@ export default  function DashboardPage() {
           <div>
             <h3 className="text-lg font-medium">Unsaved Posts</h3>
             <p className="text-sm text-muted-foreground">
-              your can see your all unsaved posts
+              your can see your all unsaved posts 
             </p>
           </div>
           {/* <Link href="/edior/1234" className={`${buttonVariants()}`}>
@@ -60,14 +71,15 @@ export default  function DashboardPage() {
         <div className="w-full h-20 ">
       
 
-          {posts?.map((post: any, index: number) => (
+          {posts?.map((post: Post, index: number) => (
             <PostCard
               key={index}
               id={post.id}
               title={post.title}
               image={post.image}
-              published=""
               date={post.updatedAt}
+              unsaved={true}
+              published=""
             />
           ))}
         </div>

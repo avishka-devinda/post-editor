@@ -15,7 +15,7 @@ import { cache } from "react"
 const getPostsForUser = cache(async () => {
   return await db.post.findMany({
     where: {
-      published: false
+      published: true
     },
     select: {
       id: true,
@@ -88,7 +88,7 @@ export default async function DashboardPage() {
               id={post.id}
               title={post.title}
               image={post.image}
-              published={post.published}
+              published=""
               date={post.updatedAt}
             />
           ))}

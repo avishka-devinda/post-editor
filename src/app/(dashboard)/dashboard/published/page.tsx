@@ -88,7 +88,7 @@ export default async function DashboardPage() {
               id={post.id}
               title={post.title}
               image={post.image}
-              published=""
+              published="published"
               date={post.updatedAt}
             />
           ))}

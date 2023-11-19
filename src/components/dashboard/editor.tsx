@@ -49,12 +49,13 @@ type SavedPost = {
   image: string;
   hasDescription: string;
   hasImage: string;
+  published: string;
   createdAt: string;
   updatedAt: string;
 };
 
 const deletePostById = (postIdToDelete: any) => {
-  const localStorageKey = "postIds";
+  const localStorageKey = "posts";
   const savedPostsString = localStorage.getItem(localStorageKey);
 
   if (savedPostsString) {
@@ -118,7 +119,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
   const [isUnsavedPost, setIsUnsavedPost] = useState(false);
 
   useEffect(() => {
-    const localStorageKey = "postIds";
+    const localStorageKey = "posts";
     const savedPostsString = localStorage.getItem(localStorageKey);
     let savedPosts = [];
 
@@ -141,6 +142,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
         image: post.image,
         hasDescription: post.hasDescription,
         hasImage: post.hasImage,
+        published: post.published,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
@@ -377,6 +379,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
       if (response.status === 200) {
         router.refresh();
         deletePostById(post.id);
+        localStorage.removeItem(post.id);
 
         return toast({
           description: "Your post has been saved.",
