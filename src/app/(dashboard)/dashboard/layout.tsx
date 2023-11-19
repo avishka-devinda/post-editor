@@ -33,12 +33,7 @@ const sidebarNavItems = [
     icon: "unpublished"
 
   },
-  {
-    title: "Unsaved",
-    href: "/examples/forms/appearance",
-    icon: "unsaved"
 
-  },
  
 ]
 

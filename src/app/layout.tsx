@@ -5,6 +5,7 @@ import { Toaster } from "@components/ui/toaster";
 import { ThemeProvider } from "@components/theme-provider";
 import NavBar from "@components/NavBar";
 import { ReactQueryProvider } from '@components/ReactQueryProvider';
+import Provider from "@components/Provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,8 +31,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <NavBar />
+          <Provider>
 
           {children}
+          </Provider>
           <Toaster />
         </ThemeProvider>
         </ReactQueryProvider>
