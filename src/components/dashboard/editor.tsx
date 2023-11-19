@@ -43,6 +43,26 @@ interface EditorProps {
   >;
 }
 
+const deletePostId = (postIdToDelete:string) => {
+  const localStorageKey = 'postIds';
+  const savedPostIdsString = localStorage.getItem(localStorageKey);
+
+  if (savedPostIdsString) {
+    try {
+      let savedPostIds = JSON.parse(savedPostIdsString);
+
+      // Filter out the post ID to delete
+      savedPostIds = savedPostIds.filter((postId:string) => postId !== postIdToDelete);
+
+      // Save the updated array back to localStorage
+      localStorage.setItem(localStorageKey, JSON.stringify(savedPostIds));
+      console.log('Post ID deleted from localStorage:', postIdToDelete);
+    } catch (error) {
+      console.error('Error parsing localStorage data:', error);
+    }
+  }
+};
+
 function deepEqual(obj1: any, obj2: any) {
   // Check if the objects are of the same type
   if (
@@ -82,6 +102,47 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
   const [unsaved, setUnsaved] = useState(false);
 
   const [isUnsaved, setIsunsaved] = useState(false);
+
+  const [isUnsavedPost, setIsUnsavedPost] = useState(false);
+
+  
+
+  useEffect(() => {
+
+    const localStorageKey = 'postIds';
+    // Check if the array of post IDs exists in localStorage
+    const savedPostIdsString = localStorage.getItem(localStorageKey);
+    let savedPostIds = [];
+
+    if (savedPostIdsString) {
+      try {
+        // Parse the string to get the array of post IDs
+        savedPostIds = JSON.parse(savedPostIdsString);
+        console.log('Post IDs loaded from localStorage:', savedPostIds);
+      } catch (error) {
+        console.error('Error parsing localStorage data:', error);
+      }
+    }
+
+    const postIdToSave = post.id; // replace with your actual post ID
+
+    // Check if the ID is not already in the array, then save it
+    if (!savedPostIds.includes(postIdToSave)) {
+      savedPostIds.push(postIdToSave);
+
+      // Save the updated array back to localStorage
+      localStorage.setItem(localStorageKey, JSON.stringify(savedPostIds));
+      console.log('Post ID saved to localStorage:', postIdToSave);
+    } else {
+      console.log('Post ID already exists in localStorage:', postIdToSave);
+    }
+  }, [isUnsavedPost]); // The empty dependency array ensures that this effect runs only once on component mount
+
+
+  // useEffect(() => {
+
+
+  // }, [isUnsavedPost]);
 
   const {
     register,
@@ -236,6 +297,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
           const jsonDataString = JSON.stringify(data);
 
           localStorage.setItem(post.id, jsonDataString);
+          setIsUnsavedPost(true)
         },
       });
     }
@@ -297,6 +359,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
 
       if (response.status === 200) {
         router.refresh();
+        deletePostId(post.id);
 
         return toast({
           description: "Your post has been saved.",
