@@ -32,7 +32,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
                 className={cn(
                   buttonVariants({ variant: "secondary" }),
                   pathname === item.href
-                    ? "bg-muted hover:bg-muted"
+                    ? " dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 bg-zinc-900 text-zinc-100 hover:bg-zinc-800"
                     : "hover:bg-transparent hover:underline hover:bg-zinc-200 dark:hover:bg-zinc-900",
                   "justify-start rounded-xl"
                 )}

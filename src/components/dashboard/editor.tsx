@@ -43,22 +43,34 @@ interface EditorProps {
   >;
 }
 
-const deletePostId = (postIdToDelete:string) => {
-  const localStorageKey = 'postIds';
-  const savedPostIdsString = localStorage.getItem(localStorageKey);
+type SavedPost = {
+  id: string;
+  title: string;
+  image: string;
+  hasDescription: string;
+  hasImage: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
-  if (savedPostIdsString) {
+const deletePostById = (postIdToDelete: any) => {
+  const localStorageKey = "postIds";
+  const savedPostsString = localStorage.getItem(localStorageKey);
+
+  if (savedPostsString) {
     try {
-      let savedPostIds = JSON.parse(savedPostIdsString);
+      let savedPosts = JSON.parse(savedPostsString);
 
-      // Filter out the post ID to delete
-      savedPostIds = savedPostIds.filter((postId:string) => postId !== postIdToDelete);
+      // Filter out the post with the specified ID
+      savedPosts = savedPosts.filter(
+        (post: any) => post[0].id !== postIdToDelete
+      );
 
       // Save the updated array back to localStorage
-      localStorage.setItem(localStorageKey, JSON.stringify(savedPostIds));
-      console.log('Post ID deleted from localStorage:', postIdToDelete);
+      localStorage.setItem(localStorageKey, JSON.stringify(savedPosts));
+      console.log("Post deleted from localStorage. Post ID:", postIdToDelete);
     } catch (error) {
-      console.error('Error parsing localStorage data:', error);
+      console.error("Error parsing localStorage data:", error);
     }
   }
 };
@@ -105,42 +117,43 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
 
   const [isUnsavedPost, setIsUnsavedPost] = useState(false);
 
-  
-
   useEffect(() => {
+    const localStorageKey = "postIds";
+    const savedPostsString = localStorage.getItem(localStorageKey);
+    let savedPosts = [];
 
-    const localStorageKey = 'postIds';
-    // Check if the array of post IDs exists in localStorage
-    const savedPostIdsString = localStorage.getItem(localStorageKey);
-    let savedPostIds = [];
-
-    if (savedPostIdsString) {
+    if (savedPostsString) {
       try {
-        // Parse the string to get the array of post IDs
-        savedPostIds = JSON.parse(savedPostIdsString);
-        console.log('Post IDs loaded from localStorage:', savedPostIds);
+        savedPosts = JSON.parse(savedPostsString);
+        console.log("Posts loaded from localStorage:", savedPosts);
       } catch (error) {
-        console.error('Error parsing localStorage data:', error);
+        console.error("Error parsing localStorage data:", error);
       }
     }
 
-    const postIdToSave = post.id; // replace with your actual post ID
+    const postIdToSave = post.id; // replace with your actual post ID to save
 
     // Check if the ID is not already in the array, then save it
-    if (!savedPostIds.includes(postIdToSave)) {
-      savedPostIds.push(postIdToSave);
+    if (!savedPosts.some((savedPost: SavedPost) => savedPost.id === postIdToSave)) {
+      savedPosts.push({
+        id: postIdToSave,
+        title: post.title,
+        image: post.image,
+        hasDescription: post.hasDescription,
+        hasImage: post.hasImage,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
 
       // Save the updated array back to localStorage
-      localStorage.setItem(localStorageKey, JSON.stringify(savedPostIds));
-      console.log('Post ID saved to localStorage:', postIdToSave);
+      localStorage.setItem(localStorageKey, JSON.stringify(savedPosts));
+      console.log("Post ID saved to localStorage:", postIdToSave);
     } else {
-      console.log('Post ID already exists in localStorage:', postIdToSave);
+      console.log("Post ID already exists in localStorage:", postIdToSave);
     }
-  }, [isUnsavedPost]); // The empty dependency array ensures that this effect runs only once on component mount
-
+  }, [isUnsavedPost]);
 
   // useEffect(() => {
-
 
   // }, [isUnsavedPost]);
 
@@ -175,22 +188,26 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
 
     let storedData = null;
 
-    const localdata = localStorage.getItem(post.id);
+    console.log("test", post.content == !null);
 
-    let storedDataObject;
+    if (post.content == !null) {
+      const localdata = localStorage.getItem(post.id) || "";
 
-    if (localdata) {
-      storedDataObject = JSON.parse(localdata);
-    }
+      let storedDataObject;
 
-    const object1 = body.content.blocks;
+      if (localdata) {
+        storedDataObject = JSON.parse(localdata);
+      }
 
-    const object2 = storedDataObject.blocks;
+      const object1 = body.content.blocks;
 
-    const areObjectsEqual = deepEqual(object1, object2);
+      const object2 = storedDataObject.blocks;
 
-    if (!areObjectsEqual) {
-      setIsunsaved(true);
+      const areObjectsEqual = deepEqual(object1, object2);
+
+      if (!areObjectsEqual) {
+        setIsunsaved(true);
+      }
     }
 
     if (unsaved) {
@@ -297,7 +314,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
           const jsonDataString = JSON.stringify(data);
 
           localStorage.setItem(post.id, jsonDataString);
-          setIsUnsavedPost(true)
+          setIsUnsavedPost(true);
         },
       });
     }
@@ -359,7 +376,7 @@ const Editor: FC<EditorProps> = ({ post }: EditorProps) => {
 
       if (response.status === 200) {
         router.refresh();
-        deletePostId(post.id);
+        deletePostById(post.id);
 
         return toast({
           description: "Your post has been saved.",

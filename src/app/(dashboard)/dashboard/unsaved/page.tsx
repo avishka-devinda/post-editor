@@ -1,3 +1,4 @@
+'use client'
 import PostCard from "@components/dashboard/post-card";
 import { PostCreateButton } from "@components/dashboard/post-create-button";
 import { Badge } from "@components/ui/badge";
@@ -7,28 +8,9 @@ import db from "@lib/db";
 import axios from "axios";
 import { CheckCircle2, Plus } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { cache } from "react"
-
-
-const getPostsForUser = cache(async () => {
-  return await db.post.findMany({
-    where: {
-      published: true
-    },
-    select: {
-      id: true,
-      title: true,
-      image:true,
-      authorId: true,
-      hasDescription: true,
-      hasImage: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
-})
 
 
 // const fetchData = async () => {
@@ -36,42 +18,36 @@ const getPostsForUser = cache(async () => {
 
 //   return response.data;
 // };
-export default async function DashboardPage() {
+export default  function DashboardPage() {
 
-  const posts = await getPostsForUser()
+  const [posts, setPosts] = useState([]);
 
+  useEffect(() => {
+    const localStorageKey = 'postIds';
+    const savedPostsString = localStorage.getItem(localStorageKey);
+    let savedPosts = [];
 
+    if (savedPostsString) {
+      try {
+        savedPosts = JSON.parse(savedPostsString);
+        console.log('Posts loaded from localStorage:', savedPosts);
+      } catch (error) {
+        console.error('Error parsing localStorage data:', error);
+      }
+    }
 
-  // React Query to fetch user details
-  // const {
-  //   data: posts,
-  //   error,
-  //   isLoading,
-  // } = useQuery({
-  //   queryKey: "post",
-  //   queryFn: fetchData,
-  // });
+    setPosts(savedPosts);
+  }, []); // The empty dependency array ensures that this effect runs only once on component mount
 
-  // console.log(posts);
-
-  // const posts = await db.post.findMany({
-  //   select: {
-  //     id: true,
-  //     title: true,
-  //     authorId: true,
-  //     createdAt: true,
-  //     updatedAt: true,
-  //   },
-  // });
 
   return (
     <div className="space-y-6">
       <div>
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="text-lg font-medium">Published Posts</h3>
+            <h3 className="text-lg font-medium">Unsaved Posts</h3>
             <p className="text-sm text-muted-foreground">
-              your can see your all published posts
+              your can see your all unsaved posts
             </p>
           </div>
           {/* <Link href="/edior/1234" className={`${buttonVariants()}`}>
@@ -82,6 +58,8 @@ export default async function DashboardPage() {
         </div>
 
         <div className="w-full h-20 ">
+      
+
           {posts?.map((post: any, index: number) => (
             <PostCard
               key={index}
@@ -93,6 +71,7 @@ export default async function DashboardPage() {
             />
           ))}
         </div>
+       
       </div>
     </div>
   );
