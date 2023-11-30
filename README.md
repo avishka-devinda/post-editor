@@ -28,12 +28,12 @@ Post Editor has the following features:
 
 Post Editor uses the following technologies:
 
-- [Next.js 14]
-- [Shadcn UI]
-- [Prisma]
-- [PostgreSQL]
-- [EditorJS]
-- [Cloudinary]
+- [Next.js 14](https://nextjs.org/)
+- [Shadcn UI](https://ui.shadcn.com/)
+- [Prisma](https://www.prisma.io/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [EditorJS](https://editorjs.io/)
+- [Cloudinary](https://cloudinary.com/)
 
 ## Getting Started
 
