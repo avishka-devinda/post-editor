@@ -2,7 +2,7 @@
 
 ## Overview
 
-Post Editor is a web application built with Next.js 14, Chakra UI, Prisma, EditorJS, and a PostgreSQL database. It provides a user-friendly interface for creating, editing, and managing posts.
+Post Editor is a web application built with Next.js 14, Shadcn UI, Prisma, EditorJS, and a PostgreSQL database. It provides a user-friendly interface for creating, editing, and managing posts.
 
 ## Features
 
@@ -14,7 +14,7 @@ Post Editor is a web application built with Next.js 14, Chakra UI, Prisma, Edito
 
 - **Server-Side Rendering (SSR)**: Next.js 14 is utilized for server-side rendering, improving performance and SEO.
 
-- **Chakra UI Components**: The UI components from Chakra UI enhance the overall aesthetics and usability of the application.
+- **Shadcn UI Components**: The UI components from Shadcn UI enhance the overall aesthetics and usability of the application.
 
 - **Prisma ORM**: The application uses Prisma as an Object-Relational Mapping (ORM) tool to interact with the PostgreSQL database.
 
@@ -40,7 +40,8 @@ Post Editor is a web application built with Next.js 14, Chakra UI, Prisma, Edito
    ```bash
    git clone https://github.com/your-username/post-editor.git
    cd post-editor
-Install dependencies:
+   Install dependencies:
+   ```
 
 bash
 Copy code
