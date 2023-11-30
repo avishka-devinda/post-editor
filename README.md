@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Post Editor
+
+## Overview
+
+Post Editor is a web application built with Next.js 14, Chakra UI, Prisma, EditorJS, and a PostgreSQL database. It provides a user-friendly interface for creating, editing, and managing posts.
+
+## Features
+
+- **Create and Edit Posts**: Users can easily create new posts and edit existing ones through a user-friendly interface.
+
+- **Rich Text Editing**: The application integrates EditorJS for a customizable and user-friendly rich text editing experience.
+
+- **Responsive Design**: The user interface is designed to be responsive, providing a seamless experience across various devices.
+
+- **Server-Side Rendering (SSR)**: Next.js 14 is utilized for server-side rendering, improving performance and SEO.
+
+- **Chakra UI Components**: The UI components from Chakra UI enhance the overall aesthetics and usability of the application.
+
+- **Prisma ORM**: The application uses Prisma as an Object-Relational Mapping (ORM) tool to interact with the PostgreSQL database.
+
+## Tech Stack
+
+- [Next.js 14](https://nextjs.org/)
+- [Shadcn UI](https://ui.shadcn.com/)
+- [Prisma](https://www.prisma.io/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [EditorJS](https://editorjs.io/)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
+- Node.js and npm installed on your machine
+- PostgreSQL database set up with appropriate credentials
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/your-username/post-editor.git
+   cd post-editor
+Install dependencies:
+
+bash
+Copy code
+npm install
+Set up the PostgreSQL database and update the connection string in the .env file.
+
+Run the database migrations:
+
+bash
+Copy code
+npx prisma migrate dev
+Start the development server:
+
+bash
+Copy code
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Open your browser and navigate to http://localhost:3000 to view the application.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Contributing
+Contributions are welcome! Please follow the contribution guidelines.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+License
+This project is licensed under the MIT License.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+css
+Copy code
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This includes information about EditorJS in the Features section and the Tech Stack section, and it provides a link to the EditorJS website for reference. Adjust the content as needed for your specific implementation and preferences.
