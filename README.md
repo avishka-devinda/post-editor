@@ -38,7 +38,7 @@ Post Editor is a web application built with Next.js 14, Shadcn UI, Prisma, Edito
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/post-editor.git
+   git clone https://github.com/avishka-devinda/post-editor.git
    cd post-editor
    Install dependencies:
    ```

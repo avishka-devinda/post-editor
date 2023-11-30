@@ -30,39 +30,9 @@ const getPostsForUser = cache(async () => {
   });
 })
 
-
-// const fetchData = async () => {
-//   const response = await axios.get("/api/post", {});
-
-//   return response.data;
-// };
 export default async function DashboardPage() {
 
   const posts = await getPostsForUser()
-
-
-
-  // React Query to fetch user details
-  // const {
-  //   data: posts,
-  //   error,
-  //   isLoading,
-  // } = useQuery({
-  //   queryKey: "post",
-  //   queryFn: fetchData,
-  // });
-
-  // console.log(posts);
-
-  // const posts = await db.post.findMany({
-  //   select: {
-  //     id: true,
-  //     title: true,
-  //     authorId: true,
-  //     createdAt: true,
-  //     updatedAt: true,
-  //   },
-  // });
 
   return (
     <div className="space-y-6">
@@ -74,10 +44,7 @@ export default async function DashboardPage() {
               your can see your all published posts
             </p>
           </div>
-          {/* <Link href="/edior/1234" className={`${buttonVariants()}`}>
-            <Plus className="w-4 h-4 mr-2" />
-            new post
-          </Link> */}
+       
           <PostCreateButton>new post</PostCreateButton>
         </div>
 
