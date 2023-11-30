@@ -10,6 +10,8 @@ Post Editor is a web application built with Next.js 14, Shadcn UI, Prisma, Edito
 
 - **Rich Text Editing**: The application integrates EditorJS for a customizable and user-friendly rich text editing experience.
 
+- **Image Upload with Cloudinary**: Utilize Cloudinary for seamless image upload, storage, and management in your posts.
+
 - **Responsive Design**: The user interface is designed to be responsive, providing a seamless experience across various devices.
 
 - **Server-Side Rendering (SSR)**: Next.js 14 is utilized for server-side rendering, improving performance and SEO.
@@ -25,6 +27,7 @@ Post Editor is a web application built with Next.js 14, Shadcn UI, Prisma, Edito
 - [Prisma](https://www.prisma.io/)
 - [PostgreSQL](https://www.postgresql.org/)
 - [EditorJS](https://editorjs.io/)
+- [Cloudinary](https://cloudinary.com/)
 
 ## Getting Started
 
@@ -41,8 +44,6 @@ Post Editor is a web application built with Next.js 14, Shadcn UI, Prisma, Edito
    git clone https://github.com/avishka-devinda/post-editor.git
    cd post-editor
    Install dependencies:
-   ```
-
 bash
 Copy code
 npm install
@@ -53,6 +54,11 @@ Run the database migrations:
 bash
 Copy code
 npx prisma migrate dev
+Set up Cloudinary:
+
+Sign up for a Cloudinary account.
+Obtain your Cloudinary API key, API secret, and cloud name.
+Update the .env file with your Cloudinary credentials.
 Start the development server:
 
 bash
@@ -60,13 +66,16 @@ Copy code
 npm run dev
 Open your browser and navigate to http://localhost:3000 to view the application.
 
+Image Upload with Cloudinary
+To enable image upload with Cloudinary, ensure your .env file is configured with your Cloudinary credentials.
+
 Contributing
 Contributions are welcome! Please follow the contribution guidelines.
 
 License
 This project is licensed under the MIT License.
 
-css
+sql
 Copy code
 
-This includes information about EditorJS in the Features section and the Tech Stack section, and it provides a link to the EditorJS website for reference. Adjust the content as needed for your specific implementation and preferences.
+Make sure to replace the Cloudinary URLs and credentials with yo
