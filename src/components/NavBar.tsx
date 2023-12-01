@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import Menu from "./menu";
 
 const NavBar = () => {
   const { setTheme } = useTheme();
@@ -37,6 +38,7 @@ const NavBar = () => {
           </svg>
         </div>
         <div>
+          
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">
@@ -63,7 +65,10 @@ const NavBar = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <Menu/>
         </div>
+        
       </div>
     </div>
   );

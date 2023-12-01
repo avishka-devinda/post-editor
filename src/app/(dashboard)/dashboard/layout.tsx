@@ -3,9 +3,10 @@ import Image from "next/image"
 
 import { SidebarNav } from "@components/dashboard/sidebar-nav"
 import { Separator } from "@components/ui/separator"
+import NavBar from "@components/NavBar"
 
 export const metadata: Metadata = {
-  title: "Forms",
+  title: "Post Editor ",
   description: "Advanced form example using react-hook-form and Zod.",
 }
 
@@ -48,18 +49,21 @@ interface SettingsLayoutProps {
 
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
   return (
-    
+    <div>
       
-      <div className=" space-y-6 p-10 pb-16">
+      <NavBar/>
+      <div className=" space-y-6 ">
        <div className="flex flex-row  ">
-          <aside className="-mx-4 lg:w-1/5 hidden  md:block mr-10 ">
+          <aside className=" h-full lg:w-1/5 hidden  md:block mr-10 ">
             <SidebarNav items={sidebarNavItems} />
 
           </aside>
       
-          <div className="flex-1 lg:max-w-2xl">{children}</div>
+          <div className="py-10 px-5  flex-1 lg:max-w-2xl">{children}</div>
         </div>
       </div>
+          </div>
+
     
   )
 }

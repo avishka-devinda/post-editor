@@ -8,12 +8,15 @@ import axios from "axios";
 import { CheckCircle2, Plus } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { useQuery } from "react-query";
-import { cache } from "react"
 
 
-const getPostsForUser = cache(async () => {
-  return await db.post.findMany({
+
+
+
+export default async function DashboardPage() {
+
+  
+  const posts = await db.post.findMany({
     select: {
       id: true,
       title: true,
@@ -24,43 +27,11 @@ const getPostsForUser = cache(async () => {
       hasImage: true,
       createdAt: true,
       updatedAt: true,
-    },
-  });
-})
-
-
-// const fetchData = async () => {
-//   const response = await axios.get("/api/post", {});
-
-//   return response.data;
-// };
-export default async function DashboardPage() {
-
-  const posts = await getPostsForUser()
+    }
+  })
 
 
 
-  // React Query to fetch user details
-  // const {
-  //   data: posts,
-  //   error,
-  //   isLoading,
-  // } = useQuery({
-  //   queryKey: "post",
-  //   queryFn: fetchData,
-  // });
-
-  // console.log(posts);
-
-  // const posts = await db.post.findMany({
-  //   select: {
-  //     id: true,
-  //     title: true,
-  //     authorId: true,
-  //     createdAt: true,
-  //     updatedAt: true,
-  //   },
-  // });
 
   return (
     <div className="space-y-6">

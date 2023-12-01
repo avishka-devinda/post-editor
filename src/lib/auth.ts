@@ -2,9 +2,11 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "./db";
 import { compare } from "bcrypt";
-import { Settings } from "lucide-react";
+import GoogleProvider from "next-auth/providers/google";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(db),
   secret: process.env.NEXTAUTH_URL,
   session: {
     strategy: "jwt",
@@ -13,6 +15,10 @@ export const authOptions: NextAuthOptions = {
     signIn: "/sign-in",
   },
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -32,7 +38,7 @@ export const authOptions: NextAuthOptions = {
           where: { email: credentials?.email },
         });
 
-        if (!existingUser) {
+        if (!existingUser || !existingUser.password || !existingUser.email) {
           return null;
         }
 
@@ -45,6 +51,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        // Ensure the returned object has the required properties
         return {
           id: `${existingUser.id}`,
           email: existingUser.email,

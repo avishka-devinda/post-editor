@@ -43,9 +43,9 @@ export default async function DashboardPage() {
       <div>
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="text-lg font-medium">Published Posts</h3>
+            <h3 className="text-lg font-medium">Draft Posts</h3>
             <p className="text-sm text-muted-foreground">
-              your can see your all published posts
+              your can see your all draft posts
             </p>
           </div>
          

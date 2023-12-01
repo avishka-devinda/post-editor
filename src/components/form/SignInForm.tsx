@@ -21,6 +21,7 @@ import axios from "axios";
 import { useToast } from "@components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import GoogleSignInButton from "@components/GoogleSignInButton";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -136,8 +137,11 @@ const SignInForm = ({ className, ...props }: UserAuthFormProps) => {
             <span className="bg-background px-2 text-muted-foreground">
               Or continue with
             </span>
+            
           </div>
+          
         </div>
+        <GoogleSignInButton>Sign in will google</GoogleSignInButton>
       </div>
     </div>
   );
