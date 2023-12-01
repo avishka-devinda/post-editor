@@ -7,7 +7,7 @@ const UserNav = () => {
 
     console.log(session)
   return (
-    <div className="m-2  pl-6 pr-4 py-4 bg-zinc-200 dark:bg-zinc-800 flex items-center justify-between rounded-xl">
+    <div className="m-2  px-3 py-4 bg-zinc-200 dark:bg-zinc-800 flex items-center justify-between rounded-xl">
     <div className="flex items-center">
       <div className="relative w-8 h-8 rounded-full ">
         <img
